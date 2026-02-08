@@ -1,0 +1,49 @@
+---
+/**
+ * BookingSection - Embedded calendar booking
+ */
+import type { ClientConfig, ClientContent, Locale } from '../content';
+
+interface Props {
+  config: ClientConfig;
+  content: ClientContent;
+  locale: Locale;
+}
+
+const { config, content, locale } = Astro.props;
+---
+
+{config.booking && content.booking && (
+  <section id="booking" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-surface">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-text">{content.booking.title}</h2>
+      <p class="text-lg text-text-light mb-8 max-w-xl mx-auto">{content.booking.subtitle}</p>
+
+      <!-- Embedded Calendar -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <iframe
+          src={`${config.booking.embedUrl}?gv=true&hl=${locale}`}
+          class="w-full h-[500px] sm:h-[600px] lg:h-[800px]"
+          frameborder="0"
+          loading="lazy"
+          title={content.booking.title}
+        ></iframe>
+      </div>
+
+      <!-- Fallback link -->
+      {content.booking.fallbackText && (
+        <p class="mt-6 text-text-light text-sm">
+          {content.booking.fallbackText}
+          <a
+            href={config.booking.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline hover:text-text transition-colors"
+          >
+            {content.booking.fallbackLink}
+          </a>
+        </p>
+      )}
+    </div>
+  </section>
+)}

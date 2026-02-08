@@ -1,0 +1,283 @@
+---
+/**
+ * PracticeLayout - Base layout for practice/service websites
+ * 
+ * Usage in client site:
+ * ---
+ * import PracticeLayout from '@pagebase/kit/layouts/PracticeLayout.astro';
+ * import { config, getContent } from '../content';
+ * const content = getContent('de');
+ * ---
+ * <PracticeLayout config={config} content={content} locale="de">
+ *   <slot />
+ * </PracticeLayout>
+ */
+
+import type { ClientConfig, ClientContent, Locale } from '../content';
+
+interface Props {
+  config: ClientConfig;
+  content: ClientContent;
+  locale: Locale;
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  config,
+  content,
+  locale,
+  title = content.meta.title,
+  description = content.meta.description,
+  noindex = false,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const baseUrl = Astro.site?.toString() ?? `https://${config.domain}`;
+const ogImage = config.social?.ogImage 
+  ? new URL(config.social.ogImage, baseUrl).toString()
+  : undefined;
+
+// Language switcher URLs
+const langSwitchUrls = {
+  de: locale === 'de' ? Astro.url.pathname : Astro.url.pathname.replace(/^\/en(\/|$)/, '/de$1'),
+  en: locale === 'en' ? Astro.url.pathname : Astro.url.pathname.replace(/^\/de(\/|$)/, '/en$1'),
+};
+
+const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
+---
+
+<!DOCTYPE html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:site_name" content={config.name} />
+
+    <!-- hreflang -->
+    <link rel="alternate" hreflang="de" href={new URL('/de/', baseUrl)} />
+    <link rel="alternate" hreflang="en" href={new URL('/en/', baseUrl)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(`/${config.defaultLocale}/`, baseUrl)} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Theme color from config -->
+    <meta name="theme-color" content={config.theme.primaryColor} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <style>
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400 700;
+        font-display: swap;
+        src: url('/fonts/inter-latin.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400 700;
+        font-display: swap;
+        src: url('/fonts/inter-latin-ext.woff2') format('woff2');
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col bg-white text-text antialiased">
+    <!-- Header -->
+    <header class="border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <nav class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <a href={localizeUrl('/')} class="brand-script text-xl sm:text-2xl font-bold text-primary hover:text-primary-dark transition-colors">
+            {config.name}
+          </a>
+
+          <div class="flex items-center gap-2 sm:gap-4">
+            <!-- Desktop Navigation -->
+            <ul class="hidden md:flex items-center gap-6 text-sm">
+              <li><a href="#contact" class="text-text-light hover:text-text transition-colors">{content.nav.contact}</a></li>
+              {content.nav.bookingShort && (
+                <li><a href="#booking" class="text-text-light hover:text-text transition-colors">{content.nav.bookingShort}</a></li>
+              )}
+              {content.nav.faq && (
+                <li><a href="#faq" class="text-text-light hover:text-text transition-colors">{content.nav.faq}</a></li>
+              )}
+            </ul>
+
+            <!-- Language Dropdown -->
+            <div class="relative hidden md:block" id="lang-dropdown">
+              <button
+                type="button"
+                id="lang-toggle"
+                class="flex items-center gap-1 px-2 py-1.5 text-sm text-text-light hover:text-text transition-colors rounded border border-transparent hover:border-border"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+                </svg>
+                <span class="uppercase font-medium">{locale}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              <div
+                id="lang-menu"
+                class="absolute right-0 mt-1 w-32 bg-white border border-border rounded-lg shadow-lg py-1 hidden z-50"
+              >
+                <a
+                  href={langSwitchUrls.de}
+                  class:list={['block px-4 py-2 text-sm transition-colors', locale === 'de' ? 'bg-primary/10 text-primary font-medium' : 'text-text-light hover:bg-surface hover:text-text']}
+                >
+                  Deutsch
+                </a>
+                <a
+                  href={langSwitchUrls.en}
+                  class:list={['block px-4 py-2 text-sm transition-colors', locale === 'en' ? 'bg-primary/10 text-primary font-medium' : 'text-text-light hover:bg-surface hover:text-text']}
+                >
+                  English
+                </a>
+              </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button
+              type="button"
+              id="mobile-menu-toggle"
+              class="md:hidden p-2 text-text-light hover:text-text transition-colors"
+              aria-label="Menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="md:hidden hidden border-t border-border py-4">
+          <div class="mb-4 pb-4 border-b border-border">
+            <p class="text-xs text-text-light uppercase tracking-wide mb-2">{content.nav.language}</p>
+            <div class="flex gap-3">
+              <a
+                href={langSwitchUrls.de}
+                class:list={['px-3 py-1.5 rounded text-sm transition-colors', locale === 'de' ? 'bg-primary text-white' : 'bg-surface text-text-light hover:text-text']}
+              >
+                Deutsch
+              </a>
+              <a
+                href={langSwitchUrls.en}
+                class:list={['px-3 py-1.5 rounded text-sm transition-colors', locale === 'en' ? 'bg-primary text-white' : 'bg-surface text-text-light hover:text-text']}
+              >
+                English
+              </a>
+            </div>
+          </div>
+
+          <ul class="space-y-1">
+            <li><a href="#contact" class="block text-text-light hover:text-text transition-colors py-2">{content.nav.contact}</a></li>
+            {content.nav.bookingShort && (
+              <li><a href="#booking" class="block text-text-light hover:text-text transition-colors py-2">{content.nav.bookingShort}</a></li>
+            )}
+            {content.nav.faq && (
+              <li><a href="#faq" class="block text-text-light hover:text-text transition-colors py-2">{content.nav.faq}</a></li>
+            )}
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-border py-8 mt-auto bg-white">
+      <div class="max-w-5xl mx-auto px-4">
+        <div class="flex flex-col items-center text-center gap-4 md:flex-row md:justify-between md:items-start md:text-left">
+          <div>
+            <p class="font-semibold text-primary">{config.name}</p>
+            <p class="text-sm text-text-light mt-1">{config.contact.address.street}, {config.contact.address.zip} {config.contact.address.city}</p>
+            {content.contact.hours && (
+              <p class="text-sm text-text-light">{locale === 'de' ? 'Sprechzeiten' : 'Hours'}: {content.contact.hours}</p>
+            )}
+          </div>
+
+          <div class="flex flex-col items-center gap-2 text-sm md:items-end">
+            <div class="flex items-center gap-6">
+              <a href={locale === 'de' ? '/de/impressum' : '/en/imprint'} class="text-text-light hover:text-text transition-colors">
+                {content.footer.imprint}
+              </a>
+              <a href={locale === 'de' ? '/de/datenschutz' : '/en/privacy'} class="text-text-light hover:text-text transition-colors">
+                {content.footer.privacy}
+              </a>
+            </div>
+            <p class="text-text-light">
+              {content.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function() {
+        const toggle = document.getElementById('lang-toggle');
+        const menu = document.getElementById('lang-menu');
+        if (!toggle || !menu) return;
+
+        toggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const isOpen = !menu.classList.contains('hidden');
+          menu.classList.toggle('hidden');
+          toggle.setAttribute('aria-expanded', String(!isOpen));
+        });
+
+        document.addEventListener('click', function() {
+          if (!menu.classList.contains('hidden')) {
+            menu.classList.add('hidden');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      })();
+    </script>
+
+    <script>
+      (function() {
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (!mobileToggle || !mobileMenu) return;
+
+        mobileToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(function(link) {
+          link.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

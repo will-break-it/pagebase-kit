@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  /* Warm Healthcare Theme - Coral & Sage */
+  --color-primary: #f08080;       /* Light coral - CTA, buttons, accents */
+  --color-primary-dark: #d96b6b;
+  --color-primary-light: #f5a0a0;
+  --color-secondary: #2d3748;     /* Slate gray - professional */
+  --color-secondary-dark: #1a202c;
+  --color-accent: #e9b44c;        /* Warm gold - subtle accent */
+  --color-accent-dark: #d4a43a;
+  --color-text: #2d3748;          /* Dark gray */
+  --color-text-light: #718096;    /* Medium gray */
+  --color-background: #ffffff;
+  --color-surface: #f8edeb;       /* Soft blush - section backgrounds */
+  --color-white: #ffffff;
+  --color-border: #e8d5cf;        /* Warm blush border */
+
+  /* Typography */
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-brand: 'Caveat', 'Inter', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: white;
+  }
+}
+
+@layer utilities {
+  .brand-script {
+    font-family: var(--font-brand);
+    letter-spacing: 0;
+  }
+}
