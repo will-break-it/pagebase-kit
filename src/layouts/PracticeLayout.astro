@@ -67,6 +67,13 @@ const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
     <meta property="og:description" content={description} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta property="og:site_name" content={config.name} />
+    <meta property="og:locale" content={locale === 'de' ? 'de_DE' : 'en_US'} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
 
     <!-- hreflang -->
     <link rel="alternate" hreflang="de" href={new URL('/de/', baseUrl)} />
