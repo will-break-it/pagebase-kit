@@ -125,12 +125,12 @@ const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
           <div class="flex items-center gap-2 sm:gap-4">
             <!-- Desktop Navigation -->
             <ul class="hidden md:flex items-center gap-6 text-sm">
-              <li><a href="#contact" class="text-text-light hover:text-text transition-colors">{content.nav.contact}</a></li>
+              <li><a href={`${localizeUrl('/')}#contact`} class="text-text-light hover:text-text transition-colors">{content.nav.contact}</a></li>
               {content.nav.bookingShort && (
-                <li><a href="#booking" class="text-text-light hover:text-text transition-colors">{content.nav.bookingShort}</a></li>
+                <li><a href={`${localizeUrl('/')}#booking`} class="text-text-light hover:text-text transition-colors">{content.nav.bookingShort}</a></li>
               )}
               {content.nav.faq && (
-                <li><a href="#faq" class="text-text-light hover:text-text transition-colors">{content.nav.faq}</a></li>
+                <li><a href={`${localizeUrl('/')}#faq`} class="text-text-light hover:text-text transition-colors">{content.nav.faq}</a></li>
               )}
             </ul>
 
@@ -205,12 +205,12 @@ const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
           </div>
 
           <ul class="space-y-1">
-            <li><a href="#contact" class="block text-text-light hover:text-text transition-colors py-2">{content.nav.contact}</a></li>
+            <li><a href={`${localizeUrl('/')}#contact`} class="block text-text-light hover:text-text transition-colors py-2">{content.nav.contact}</a></li>
             {content.nav.bookingShort && (
-              <li><a href="#booking" class="block text-text-light hover:text-text transition-colors py-2">{content.nav.bookingShort}</a></li>
+              <li><a href={`${localizeUrl('/')}#booking`} class="block text-text-light hover:text-text transition-colors py-2">{content.nav.bookingShort}</a></li>
             )}
             {content.nav.faq && (
-              <li><a href="#faq" class="block text-text-light hover:text-text transition-colors py-2">{content.nav.faq}</a></li>
+              <li><a href={`${localizeUrl('/')}#faq`} class="block text-text-light hover:text-text transition-colors py-2">{content.nav.faq}</a></li>
             )}
           </ul>
         </div>
