@@ -220,7 +220,13 @@ const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
         <div class="flex flex-col items-center text-center gap-4 md:flex-row md:justify-between md:items-start md:text-left">
           <div>
             <p class="font-semibold text-primary">{config.name}</p>
-            <p class="text-sm text-text-light mt-1">{config.contact.address.street}, {config.contact.address.zip} {config.contact.address.city}</p>
+            {config.contact.mapsLink ? (
+              <a href={config.contact.mapsLink} target="_blank" rel="noopener noreferrer" class="text-sm text-text-light mt-1 block hover:text-primary transition-colors">
+                {config.contact.address.street}, {config.contact.address.zip} {config.contact.address.city}
+              </a>
+            ) : (
+              <p class="text-sm text-text-light mt-1">{config.contact.address.street}, {config.contact.address.zip} {config.contact.address.city}</p>
+            )}
             {content.contact.hours && (
               <p class="text-sm text-text-light">{locale === 'de' ? 'Sprechzeiten' : 'Hours'}: {content.contact.hours}</p>
             )}
