@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./components/*": "./src/components/*",
     "./layouts/*": "./src/layouts/*",
     "./sections/*": "./src/sections/*",
     "./content": "./src/content/index.ts",
