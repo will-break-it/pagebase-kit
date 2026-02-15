@@ -33,6 +33,7 @@ const {
   noindex = false,
 } = Astro.props;
 
+const logoPath = (config.theme as any).logo || null;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const baseUrl = Astro.site?.toString() ?? `https://${config.domain}`;
 const ogImage = config.social?.ogImage 
@@ -119,7 +120,8 @@ const aboutUrl = (content.nav as any).about ? localizeUrl(locale === 'de' ? '/ue
     <header class="border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-50">
       <nav class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-          <a href={localizeUrl('/')} class="brand-script text-xl sm:text-2xl font-bold text-primary hover:text-primary-dark transition-colors">
+          <a href={localizeUrl('/')} class="brand-script text-xl sm:text-2xl font-bold text-primary hover:text-primary-dark transition-colors flex items-center gap-2">
+            {logoPath && <img src={logoPath} alt="" class="h-8 sm:h-9 w-auto" />}
             {config.name}
           </a>
 
@@ -233,7 +235,10 @@ const aboutUrl = (content.nav as any).about ? localizeUrl(locale === 'de' ? '/ue
       <div class="max-w-5xl mx-auto px-4">
         <div class="flex flex-col items-center text-center gap-4 md:flex-row md:justify-between md:items-start md:text-left">
           <div>
-            <p class="font-semibold text-primary">{config.name}</p>
+            <p class="font-semibold text-primary flex items-center gap-2">
+              {logoPath && <img src={logoPath} alt="" class="h-7 w-auto" />}
+              {config.name}
+            </p>
             {config.contact.mapsLink ? (
               <a href={config.contact.mapsLink} target="_blank" rel="noopener noreferrer" class="text-sm text-text-light mt-1 block hover:text-primary transition-colors">
                 {config.contact.address.street}, {config.contact.address.zip} {config.contact.address.city}
