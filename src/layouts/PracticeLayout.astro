@@ -248,6 +248,11 @@ const aboutUrl = (content.nav as any).about ? localizeUrl(locale === 'de' ? '/ue
 
           <div class="flex flex-col items-center gap-2 text-sm md:items-end">
             <div class="flex items-center gap-6">
+              {aboutUrl && (
+                <a href={aboutUrl} class="text-text-light hover:text-text transition-colors">
+                  {(content.nav as any).about}
+                </a>
+              )}
               <a href={locale === 'de' ? '/de/impressum' : '/en/imprint'} class="text-text-light hover:text-text transition-colors">
                 {content.footer.imprint}
               </a>
