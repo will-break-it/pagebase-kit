@@ -46,6 +46,7 @@ const langSwitchUrls = {
 };
 
 const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
+const aboutUrl = (content.nav as any).about ? localizeUrl(locale === 'de' ? '/ueber-mich' : '/about') : null;
 ---
 
 <!DOCTYPE html>
@@ -125,6 +126,9 @@ const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
           <div class="flex items-center gap-2 sm:gap-4">
             <!-- Desktop Navigation -->
             <ul class="hidden md:flex items-center gap-6 text-sm">
+              {aboutUrl && (
+                <li><a href={aboutUrl} class="text-text-light hover:text-text transition-colors">{(content.nav as any).about}</a></li>
+              )}
               <li><a href={`${localizeUrl('/')}#contact`} class="text-text-light hover:text-text transition-colors">{content.nav.contact}</a></li>
               {content.nav.bookingShort && (
                 <li><a href={`${localizeUrl('/')}#booking`} class="text-text-light hover:text-text transition-colors">{content.nav.bookingShort}</a></li>
@@ -205,6 +209,9 @@ const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
           </div>
 
           <ul class="space-y-1">
+            {aboutUrl && (
+              <li><a href={aboutUrl} class="block text-text-light hover:text-text transition-colors py-2">{(content.nav as any).about}</a></li>
+            )}
             <li><a href={`${localizeUrl('/')}#contact`} class="block text-text-light hover:text-text transition-colors py-2">{content.nav.contact}</a></li>
             {content.nav.bookingShort && (
               <li><a href={`${localizeUrl('/')}#booking`} class="block text-text-light hover:text-text transition-colors py-2">{content.nav.bookingShort}</a></li>
