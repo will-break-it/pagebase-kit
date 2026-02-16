@@ -241,7 +241,7 @@ const aboutUrl = (content.nav as any).about ? localizeUrl(locale === 'de' ? '/ue
             </p>
             {config.contact.mapsLink ? (
               <a href={config.contact.mapsLink} target="_blank" rel="noopener noreferrer" class="text-sm text-text-light mt-1 block hover:text-primary transition-colors">
-                {config.contact.address.street}, {config.contact.address.zip} {config.contact.address.city}
+                {config.contact.address.street}, {config.contact.address.zip} {config.contact.address.city} →
               </a>
             ) : (
               <p class="text-sm text-text-light mt-1">{config.contact.address.street}, {config.contact.address.zip} {config.contact.address.city}</p>
@@ -249,6 +249,9 @@ const aboutUrl = (content.nav as any).about ? localizeUrl(locale === 'de' ? '/ue
             {content.contact.hours && (
               <p class="text-sm text-text-light">{locale === 'de' ? 'Sprechzeiten' : 'Hours'}: {content.contact.hours}</p>
             )}
+            <a href={`mailto:${config.contact.email}`} class="text-sm text-text-light block hover:text-primary transition-colors">
+              {config.contact.email}
+            </a>
           </div>
 
           <div class="flex flex-col items-center gap-2 text-sm md:items-end">
