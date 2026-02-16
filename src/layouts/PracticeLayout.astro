@@ -22,6 +22,7 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  alternateUrls?: Record<string, string>;
 }
 
 const {
@@ -31,6 +32,7 @@ const {
   title = content.meta.title,
   description = content.meta.description,
   noindex = false,
+  alternateUrls,
 } = Astro.props;
 
 const cdnBase = config.cdn ? `${config.cdn}/` : '';
@@ -43,9 +45,13 @@ const ogImage = config.social?.ogImage
   : undefined;
 
 // Language switcher URLs
-const langSwitchUrls = {
+const fallbackSwitch = {
   de: locale === 'de' ? Astro.url.pathname : Astro.url.pathname.replace(/^\/en(\/|$)/, '/de$1'),
   en: locale === 'en' ? Astro.url.pathname : Astro.url.pathname.replace(/^\/de(\/|$)/, '/en$1'),
+};
+const langSwitchUrls = {
+  de: alternateUrls?.de || fallbackSwitch.de,
+  en: alternateUrls?.en || fallbackSwitch.en,
 };
 
 const localizeUrl = (path: string) => `/${locale}${path === '/' ? '' : path}`;
