@@ -22,6 +22,7 @@ export interface ClientConfig {
   contact: {
     email: string;
     phone?: string;
+    fax?: string;
     address: {
       street: string;
       city: string;
