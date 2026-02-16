@@ -33,11 +33,13 @@ const {
   noindex = false,
 } = Astro.props;
 
-const logoPath = (config.theme as any).logo || null;
+const cdnBase = config.cdn ? `${config.cdn}/` : '';
+const rawLogo = (config.theme as any).logo || null;
+const logoPath = rawLogo && cdnBase ? `${cdnBase}${rawLogo.replace(/^\//, '')}` : rawLogo;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const baseUrl = Astro.site?.toString() ?? `https://${config.domain}`;
 const ogImage = config.social?.ogImage 
-  ? new URL(config.social.ogImage, baseUrl).toString()
+  ? (cdnBase ? `${cdnBase}${config.social.ogImage}` : new URL(config.social.ogImage, baseUrl).toString())
   : undefined;
 
 // Language switcher URLs
@@ -83,7 +85,7 @@ const aboutUrl = (content.nav as any).about ? localizeUrl(locale === 'de' ? '/ue
     <link rel="alternate" hreflang="x-default" href={new URL(`/${config.defaultLocale}/`, baseUrl)} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={cdnBase ? `${cdnBase}favicon.svg` : '/favicon.svg'} />
 
     <!-- Theme color from config -->
     <meta name="theme-color" content={config.theme.primaryColor} />

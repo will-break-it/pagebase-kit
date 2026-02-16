@@ -7,6 +7,7 @@ export interface ClientConfig {
   id: string;
   name: string;
   domain: string;
+  cdn?: string;
   defaultLocale: Locale;
   locales: Locale[];
   theme: {

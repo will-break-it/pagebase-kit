@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { config, content } = Astro.props;
+const cdnBase = config.cdn ? `${config.cdn}/` : '';
 
 const accentColors = [
   { bg: 'var(--color-accent-1, var(--color-primary))', text: 'var(--color-accent-1, var(--color-primary))' },
@@ -28,7 +29,7 @@ const accentColors = [
             <div class="absolute inset-0 bg-primary/20 rounded-full blur-xl scale-110"></div>
             <div class="relative w-full h-full rounded-full shadow-lg ring-4 ring-white overflow-hidden">
               <img
-                src={`/${config.practitioner.photo.replace('assets/', '')}`}
+                src={cdnBase ? `${cdnBase}${config.practitioner.photo}` : `/${config.practitioner.photo.replace('assets/', '')}`}
                 alt={`${config.practitioner.name} - ${config.practitioner.title}`}
                 class="w-full h-full object-cover object-top"
                 loading="eager"
